@@ -1,4 +1,10 @@
-get-content |
+add-type -assemblyname system.windows.forms
+$openfiledialog = new-object system.windows.forms.openfiledialog
+$openfiledialog.initialdirectory = ".\"
+$openfiledialog.filter = "csv files (*.csv)| *.csv"
+$openfiledialog.showhelp = $true
+$openfiledialog.showdialog() | out-null
+get-content $openfiledialog.filename |
 select-string -pattern ",35[0-2]," |
 foreach-object {($_ -split ",")[1,4,0] -join " "} |
 foreach-object {($_.substring(0,38) -split " ")[9,0,1,2,5,6] -join " "} |
