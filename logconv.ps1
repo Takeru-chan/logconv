@@ -5,7 +5,8 @@ $openfiledialog.filter = "csv files (*.csv)| *.csv"
 $openfiledialog.showhelp = $true
 $openfiledialog.showdialog() | out-null
 get-content $openfiledialog.filename |
-select-string -pattern ",35[0-2]," |
+select-string -pattern "35[0-2]" |
+foreach-object {($_ -replace '"','')} |
 foreach-object {($_ -split ",")[1,4,0] -join " "} |
 foreach-object {($_.substring(0,38) -split " ")[9,0,1,2,5,6] -join " "} |
 # sort-object |
@@ -22,4 +23,5 @@ foreach-object -begin{$array="","","","","","","","","","","","","","","","","",
                        [Convert]::ToInt32($array[10],16)+","+[Convert]::ToInt32($array[11],16)+","+
                        [Convert]::ToInt32($array[14],16)+","+[Convert]::ToInt32($array[15],16)+","+
                        [Convert]::ToInt32($array[16],16)+","+[Convert]::ToInt32($array[17],16)}
-                       }
+                       } |
+out-file dest.csv -encoding default
